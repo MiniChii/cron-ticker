@@ -10,3 +10,7 @@ docker buildx use mybuilder
 
 #crear para varias plataformas debe estar en la ruta del dockerfile
 docker buildx build --platform linux/amd64,linux/arm64,linux/arm/v7 -t minichii/cron-ticker:latest --push .
+
+#prueba sin el --platform=$BUILDPLATFORM 
+docker buildx build --platform linux/amd64,linux/arm64,linux/arm/v7 -t minichii/cron-ticker:1.0.4 --push .
+docker buildx build --platform linux/amd64,linux/arm64,linux/arm/v7 -t minichii/cron-ticker:latest --push .
