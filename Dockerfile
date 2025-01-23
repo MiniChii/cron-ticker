@@ -1,29 +1,33 @@
 
-FROM node:19.2-alpine3.16
-# FROM --platform=linux/amd64 node:19.2-alpine3.16
-
+FROM node:19.2-alpine3.16 as deps
 #como un cd app
 WORKDIR /app
-
 COPY package.json ./
-
 #instala dependencias
 RUN npm install
 
+
+###STAGE: test
+FROM node:19.2-alpine3.16 as tester
+WORKDIR /app
+COPY --from=deps /app/node_modules /app/node_modules
 #copia todos los archivos en el workdir (los tests) menos los del dockerignore
 COPY . .
-
 #realizar testing
-RUN npm test
+RUN npm run test
 
-#eliminar todo lo de los tests
-RUN rm -rf tests && rm -rf node_modules
 
-#isntala dependencias prod
+###STAGE: runner
+FROM node:19.2-alpine3.16 as runner
+WORKDIR /app
+COPY app.js ./
+COPY tasks/ ./tasks
+COPY package.json ./
 RUN npm install --prod
 
+
 #correr la app
-CMD [ "node", "app.js" ]
+CMD  [ "node", "app.js" ]
 
 
 

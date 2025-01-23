@@ -6,3 +6,5 @@ Dockerfile
 .git
 .gitignore
 .dockerignore
+
+Readme.md
